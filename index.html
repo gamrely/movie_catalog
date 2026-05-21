@@ -7,8 +7,51 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="page">
+        <header class="main-header"
+            <div class="header-content">
+                <p class="subtitle">Movie Catalog</p>
+                <h1>Каталог фільмів</h1>
+                <p class="description">Вебзастосунок для пошуку фільмів через OMDb API
+                <p> 
+            </div>
+        </header>
+
+        <main class="container">
+            <section class="panel search-panel">
+                <h2>Пошук фільму</h2>
+                <p class="hint">Введіть назву фільму англійською або українською мовою</p>
+
+                <div class="search-box"
+                    <input type="text" id="searchinput" placeholder="Наприклад: Stranger Things"
+                    <button onclick="searchMovies()">Шукати</button>
+                 </div>
+            </section>
+
+            <section class="panel">
+                <div class="section-title">
+                    <h2>Результати пошуку</h2>
+                    <span>API</span>
+                </div>
+
+                <div id="results" class="movie-list"
+                     <p class="empty">Введіть назву фільму для пошуку</p>
+                </div>
+            </section>
+
+            <section class="panel"
+                <div class="section-title">
+                    <h2>Мій каталог</h2>
+                    <span>localStorage</span>
+                </div>
+
+                <div id="myCatalog" class="movie-list"></div>
+            </section>
+        </main>
+    </div>
+    
 
 
     <script src="script.js"></script>
 </body>
-</html>
+</html> 
