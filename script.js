@@ -1,4 +1,4 @@
-const API_KEY = "http://www.omdbapi.com/?i=tt3896198&apikey=3e1a4b89";
+const API_KEY = "3e1a4b89";
 
 async function searchMovies() {
     let query = document.getElementById("searchInput").value;
@@ -26,3 +26,37 @@ async function searchMovies() {
         results.innerHTML = "<p class='empty'>Помилка завантаження даних</p>";
     }
 }
+
+function showResults(movies) {
+    let results = document.getElementById("results");
+    results.innerHTML = "";
+
+        for (let i = 0; i < movies.length; i++) {
+        let movie = movies[i];
+
+        let title = movie.Title || "Невідома назва";
+        let year = movie.Year || "Невідомо";
+        let type = movie.Type || "Невідомо";
+        let poster = movie.Poster !== "N/A" 
+        ? movie.Poster
+        : "https://via.placeholder.com/85x125?text=No+Poster";
+
+        results.innerHTML += `
+          <div class="movie">
+          <img src="${poster}" alt="Постер фільму">
+          <div class="movie-info">
+           <h3>${title}</h3>
+           <p><b>Рік:</b> ${year}</p>
+           <p><b>Тип:</b> ${type}</p>
+           <button class="save-btn" onclick="addToCatalog()('${escapetext(title)}', '${year}', '${type}', '${poster}')">
+           Додати в каталог
+           </button>
+           </div>
+           </div>
+        `;
+
+    }
+    
+
+}
+

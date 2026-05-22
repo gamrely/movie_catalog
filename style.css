@@ -128,7 +128,7 @@ button {
 
 .movie-list {
     display: grid;
-    grid-template-columns: repear(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 18px;
 }
 
@@ -164,7 +164,7 @@ button {
     color: #ffffff;
 }
 
-movie p {
+.movie p {
     margin: 5px 0;
     font-size: 14px;
     color: #cbd5e1;
@@ -183,21 +183,5 @@ movie p {
 }
 
 .delete-btn {
-    background: #dc2626;
-    color: white;
-    margin-top: 10px;
-    padding: 9px 11px;
-    font-size: 14px;
-}
-
-.delete-btn:hover {
-    background: #b91c1c;
-}
-
-.empty,
-.loading {
-    grid-column: 1/-1;
-    text-align: center;
-    color: #9ca3af;
-    padding: 18px;
+    background: #dc2626
 }
