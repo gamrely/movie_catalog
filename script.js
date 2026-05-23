@@ -121,3 +121,7 @@ function deleteFromCatalog(index) {
 function saveCatalog() {
     localStorage.setItem("myMovieCatalog", JSON.stringify(savedMovies));
 }
+
+function escapeText(text) {
+    return String(text).replace(/'/g, "\\'");
+}
