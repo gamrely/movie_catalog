@@ -100,3 +100,8 @@ function showMyCatalog() {
 
 
 }
+
+function deleteFromCatalog(index) {
+    savedMovies.splice(index, 1);
+    showMyCatalog();
+}
