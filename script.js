@@ -48,7 +48,7 @@ function showResults(movies) {
            <h3>${title}</h3>
            <p><b>Рік:</b> ${year}</p>
            <p><b>Тип:</b> ${type}</p>
-           <button class="save-btn" onclick="addToCatalog()('${escapetext(title)}', '${year}', '${type}', '${poster}')">
+           <button class="save-btn" onclick="addToCatalog('${escapeText(title)}', '${year}', '${type}', '${poster}')">
            Додати в каталог
            </button>
            </div>
@@ -103,7 +103,7 @@ function showMyCatalog() {
            <h3>${movie.title}</h3>
            <p><b>Рік:</b> ${movie.year}</p>
            <p><b>Тип:</b> ${movie.type}</p>
-           <button class="remove-btn" onclick="removeFromCatalog(${i})">Видалити</button>
+           <button class="remove-btn" onclick="deleteFromCatalog(${i})">Видалити</button>
            </div>
         <div>
     `;
