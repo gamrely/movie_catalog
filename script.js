@@ -62,6 +62,16 @@ function showResults(movies) {
 
 let savedMovies = [];
 
+window.onload = function() {
+    let data = localStorage.getItem("myMovieCatalog");
+
+    if (data) {
+        savedMovies = JSON.parse(data);
+    }
+
+    showMyCatalog();
+};
+
 function addToCatalog(title, year, type, poster) {
     let movie = {
         title: title,
@@ -71,6 +81,7 @@ function addToCatalog(title, year, type, poster) {
     };
 
     savedMovies.push(movie);
+    saveCatalog();
     showMyCatalog();
 }
 
@@ -103,5 +114,10 @@ function showMyCatalog() {
 
 function deleteFromCatalog(index) {
     savedMovies.splice(index, 1);
+    saveCatalog();
     showMyCatalog();
+}
+
+function saveCatalog() {
+    localStorage.setItem("myMovieCatalog", JSON.stringify(savedMovies));
 }
