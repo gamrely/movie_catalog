@@ -60,3 +60,43 @@ function showResults(movies) {
 
 }
 
+let savedMovies = [];
+
+function addToCatalog(title, year, type, poster) {
+    let movie = {
+        title: title,
+        year: year,
+        type: type,
+        poster: poster
+    };
+
+    savedMovies.push(movie);
+    showMyCatalog();
+}
+
+function showMyCatalog() {
+    let myCatalog = document.getElementById("myCatalog");
+    myCatalog.innerHTML = "";
+
+    if (savedMovies.length === 0) {
+        myCatalog.innerHTML = "<p class='empty'>У каталозі поки що немає фільмів</p>";
+        return;
+    }
+    for (let i = 0; i < savedMovies.length; i++)    {
+        let movie = savedMovies[i];
+
+        myCatalog.innerHTML += `
+         <div class="movie">
+          <img src="${movie.poster}" alt="Постер фільму">
+          <div class="movie-info">
+           <h3>${movie.title}</h3>
+           <p><b>Рік:</b> ${movie.year}</p>
+           <p><b>Тип:</b> ${movie.type}</p>
+           <button class="remove-btn" onclick="removeFromCatalog(${i})">Видалити</button>
+           </div>
+        <div>
+    `;
+    }
+
+
+}
