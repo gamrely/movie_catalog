@@ -1,0 +1,8 @@
+{
+    "name": "movie_catalog",
+    "version": "1.0.0",
+    "description": "Simple movie catalog application using OMDb API",
+    "main": "index.html",
+    "author": "Illia Liashenko",
+    "license": "MIT"
+}
