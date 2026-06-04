@@ -1,5 +1,7 @@
 const API_KEY = "3e1a4b89";
 
+let searchCache = {};
+
 async function searchMovies() {
     let query = document.getElementById("searchInput").value;
     let results = document.getElementById("results");
@@ -11,21 +13,46 @@ async function searchMovies() {
 
     results.innerHTML = "<p class='loading'>Завантаження...</p>";
 
-    try {
-       let url = "https://www.omdbapi.com/?apikey=" + API_KEY + "&s=" + encodeURIComponent(query);
-       let response = await fetch(url);
-       let data = await response.json();
 
-       if (data.Response === "False") {
+try {
+    let movies = await getMoviesWithCache(query);
+
+    if (movies.length === 0) {
         results.innerHTML = "<p class='empty'>Фільми не знайдено</p>";
         return;
-         }
-
-         showResults(data.Search.slice(0, 6));
-    } catch (error) {
-        results.innerHTML = "<p class='empty'>Помилка завантаження даних</p>";
     }
+
+    showResults(movies);
+} catch (error) {
+    results.innerHTML = "<p class='empty'>Помилка завантаження даних</p>";
 }
+}
+
+async function getMoviesWithCache(query) {
+    let key = query.toLowerCase().trim();
+
+    if (searchCache[key]) {
+        console.log("Дані отримані з кешу");
+        return searchCache[key];
+    }
+
+    console.log("Завантаження даних з API");
+    let url = "https://www.omdbapi.com/?apikey=" + API_KEY + "&s=" + encodeURIComponent(query);
+    let response = await fetch(url);
+    let data = await response.json();
+
+    if (data.Response === "False") {
+        return [];
+    }
+
+let movies = data.Search.slice(0, 6);
+
+searchCache[key] = movies;
+return movies;
+
+}
+
+
 
 function showResults(movies) {
     let results = document.getElementById("results");
@@ -105,7 +132,7 @@ function showMyCatalog() {
            <p><b>Тип:</b> ${movie.type}</p>
            <button class="remove-btn" onclick="deleteFromCatalog(${i})">Видалити</button>
            </div>
-        <div>
+        </div>
     `;
     }
 
