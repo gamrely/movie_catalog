@@ -2,6 +2,18 @@ const API_KEY = "3e1a4b89";
 
 let searchCache = {};
 
+function getCurrentTime() {
+    return new Date().toLocaleString();
+}
+
+function logInfo(message) {
+    console.log("[INFO]", getCurrentTime(), message);
+}
+
+function logError(message) {
+    console.error("[ERROR]", getCurrentTime(), message);
+}
+
 async function searchMovies() {
     let query = document.getElementById("searchInput").value;
     let results = document.getElementById("results");
@@ -9,7 +21,10 @@ async function searchMovies() {
     if (query === "") {
         alert("Введіть назву фільму для пошуку!");
         return;
+
     }
+
+    logInfo("Почато пошук фільму: " + query);
 
     results.innerHTML = "<p class='loading'>Завантаження...</p>";
 
@@ -25,6 +40,7 @@ try {
     showResults(movies);
 } catch (error) {
     results.innerHTML = "<p class='empty'>Помилка завантаження даних</p>";
+    logError("Помилка під час пошуку фільму");
 }
 }
 
@@ -32,13 +48,18 @@ async function getMoviesWithCache(query) {
     let key = query.toLowerCase().trim();
 
     if (searchCache[key]) {
-        console.log("Дані отримані з кешу");
+    logInfo("Дані отримані з кешу: " + key);
         return searchCache[key];
     }
 
-    console.log("Завантаження даних з API");
+    logInfo("Завантаження даних з API: " + key);
     let url = "https://www.omdbapi.com/?apikey=" + API_KEY + "&s=" + encodeURIComponent(query);
     let response = await fetch(url);
+    if (!response.ok) {
+    logError("Помилка API. Код відповіді: " + response.status);
+    throw new Error("API error: " + response.status);
+}
+
     let data = await response.json();
 
     if (data.Response === "False") {
@@ -108,8 +129,10 @@ function addToCatalog(title, year, type, poster) {
     };
 
     savedMovies.push(movie);
+    logInfo("Фільм додано в каталог: " + title);
     saveCatalog();
     showMyCatalog();
+    
 }
 
 function showMyCatalog() {
@@ -140,13 +163,16 @@ function showMyCatalog() {
 }
 
 function deleteFromCatalog(index) {
+    let movieTitle = savedMovies[index].title;
     savedMovies.splice(index, 1);
+    logInfo("Фільм видалено з каталогу: " + movieTitle);
     saveCatalog();
     showMyCatalog();
 }
 
 function saveCatalog() {
     localStorage.setItem("myMovieCatalog", JSON.stringify(savedMovies));
+    logInfo("Каталог збережено в localStorage");
 }
 
 function escapeText(text) {
