@@ -1,6 +1,39 @@
 const API_KEY = "3e1a4b89";
 
 let searchCache = {};
+let cacheKeys = [];
+const CACHE_LIMIT = 5;
+
+function getCurrentTime() {
+    return new Date().toLocaleString();
+}
+
+function log(level, message, data = "") {
+    let time = getCurrentTime();
+
+    if (level === "ERROR") {
+        console.error(`[${level}] ${time} ${message}`, data);
+    } else {
+        console.log(`[${level}] ${time} ${message}`, data);
+    }
+}
+
+function logFunction(level, functionName, func) {
+    return async function(...args) {
+    log(level, "Виклик функції: " + functionName, args);
+
+     try {
+      let result = await func(...args);
+
+        log(level, "Результат функції: " + functionName, result);
+
+        return result;
+      } catch (error) {
+        log("ERROR", "Помилка у функції: " + functionName, error.message);
+        throw error;
+        }
+    };
+}
 
 function getCurrentTime() {
     return new Date().toLocaleString();
@@ -48,17 +81,19 @@ async function getMoviesWithCache(query) {
     let key = query.toLowerCase().trim();
 
     if (searchCache[key]) {
-    logInfo("Дані отримані з кешу: " + key);
+        logInfo("Дані отримані з кешу: " + key);
         return searchCache[key];
     }
 
     logInfo("Завантаження даних з API: " + key);
+
     let url = "https://www.omdbapi.com/?apikey=" + API_KEY + "&s=" + encodeURIComponent(query);
     let response = await fetch(url);
+
     if (!response.ok) {
-    logError("Помилка API. Код відповіді: " + response.status);
-    throw new Error("API error: " + response.status);
-}
+        logError("Помилка API. Код відповіді: " + response.status);
+        throw new Error("API error");
+    }
 
     let data = await response.json();
 
@@ -66,11 +101,18 @@ async function getMoviesWithCache(query) {
         return [];
     }
 
-let movies = data.Search.slice(0, 6);
+    let movies = data.Search.slice(0, 6);
 
-searchCache[key] = movies;
-return movies;
+    if (cacheKeys.length >= CACHE_LIMIT) {
+        let oldKey = cacheKeys.shift();
+        delete searchCache[oldKey];
+        logInfo("Видалено старий елемент кешу: " + oldKey);
+    }
 
+    searchCache[key] = movies;
+    cacheKeys.push(key);
+
+    return movies;
 }
 
 
@@ -178,3 +220,6 @@ function saveCatalog() {
 function escapeText(text) {
     return String(text).replace(/'/g, "\\'");
 }
+
+searchMovies = logFunction("INFO", "searchMovies", searchMovies);
+getMoviesWithCache = logFunction("DEBUG", "getMoviesWithCache", getMoviesWithCache);
